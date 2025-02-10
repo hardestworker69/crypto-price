@@ -14,9 +14,9 @@ const headers = {
 
 // API parameters to fetch Bitcoin's data
 const params = {
-    'start': '1',
-    'limit': '1',      // Only fetch the first cryptocurrency (Bitcoin)
-    'convert': 'USD'
+    'start': '1',    // Start with Bitcoin (first in list)
+    'limit': '1',    // Only fetch the first cryptocurrency (Bitcoin)
+    'convert': 'USD' // Convert the price to USD
 };
 
 // Function to format the params into a query string
@@ -32,12 +32,21 @@ function fetchCryptoData() {
     const queryString = formatParams(params);
     const fullUrl = `${url}?${queryString}`;
 
+    console.log('Fetching data from URL:', fullUrl); // Log the full URL for debugging
+
     fetch(fullUrl, {
         method: 'GET',
         headers: headers
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('API Response:', data); // Log the API response for debugging
+
         // Clear previous table rows
         tableBody.innerHTML = '';
 
